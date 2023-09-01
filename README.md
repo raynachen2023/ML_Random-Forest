@@ -1,5 +1,6 @@
 # sound-of-music-
 Data source: https://www.kaggle.com/competitions/musiclala2023
+The project is using random forest method to predict ratings
 
 ## Understand the data
 id: Song id
