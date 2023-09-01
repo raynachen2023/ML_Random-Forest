@@ -1,4 +1,4 @@
-# sound-of-music-
+# sound-of-music
 The project is using random forest method to predict ratings
 
 ## Understand the data
