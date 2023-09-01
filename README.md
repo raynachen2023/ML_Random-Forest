@@ -91,9 +91,9 @@ library(ggplot2)
 library(randomForest)
 library(lattice)
 library(caret)
-dat <- read.csv('C:/Users/chenron/Desktop/Columbia/R/Kaggle/Competition Data/analysisData.csv')
+dat <- read.csv('analysisData.csv')
 dim(dat)
-test<- read.csv('C:/Users/chenron/Desktop/Columbia/R/Kaggle/Competition Data/scoringData.csv')
+test<- read.csv('scoringData.csv')
 dim(test)
 
 ```
