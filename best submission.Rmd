@@ -1,16 +1,5 @@
----
-title: "PAC report with best submission model"
-output: html_document
-date: "2023-04-27"
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 ## Data Analysis Process 
 
-When I first  started the Kaggle competition, my strategy was to start with data cleaning and tidying. I realized that there are many numeric variables in the dataset, so I summarized each numeric variable to see whether the numbers make sense. This process also helped me understand the data better.  For example, I was not really sure what valence mean in the context of music and after some research I discovered it reflects the positiveness of the song which could potentially have a significant impact on ratings. 
 
 Based on the understanding of the data, at the very first few attempts, I aggregated categories for some variables and divided numbers into groups. For example, 
 
