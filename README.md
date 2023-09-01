@@ -1,6 +1,28 @@
 # sound-of-music-
-## Data Analysis Process 
+Data source: https://www.kaggle.com/competitions/musiclala2023
 
+## Understand the data
+id: Song id
+performer: Performer name
+song: Song name
+genre: Genre
+track_duration: Duration in milliseconds
+track_explicit: Is explicit
+danceability: Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+energy: Energy is a measure from 0.0 to 1.0 and represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy. For example, death metal has high energy, while a Bach prelude scores low on the scale. Perceptual features contributing to this attribute include dynamic range, perceived loudness, timbre, onset rate, and general entropy.
+key: The estimated overall key of the track. Integers map to pitches using standard Pitch Class notation . E.g. 0 = C, 1 = C♯/D♭, 2 = D, and so on. If no key was detected, the value is -1.
+loudness: The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typical range between -60 and 0 db.
+mode: Mode indicates the modality (major or minor) of a track, the type of scale from which its melodic content is derived. Major is represented by 1 and minor is 0.
+speechiness: Speechiness detects the presence of spoken words in a track. The more exclusively speech-like the recording (e.g. talk show, audio book, poetry), the closer to 1.0 the attribute value. Values above 0.66 describe tracks that are probably made entirely of spoken words. Values between 0.33 and 0.66 describe tracks that may contain both music and speech, either in sections or layered, including such cases as rap music. Values below 0.33 most likely represent music and other non-speech-like tracks.
+acousticness: A confidence measure from 0.0 to 1.0 of whether the track is acoustic. 1.0 represents high confidence the track is acoustic.
+instrumentalness: Predicts whether a track contains no vocals. “Ooh” and “aah” sounds are treated as instrumental in this context. Rap or spoken word tracks are clearly “vocal”. The closer the instrumentalness value is to 1.0, the greater likelihood the track contains no vocal content. Values above 0.5 are intended to represent instrumental tracks, but confidence is higher as the value approaches 1.0.
+liveness: Detects the presence of an audience in the recording. Higher liveness values represent an increased probability that the track was performed live. A value above 0.8 provides strong likelihood that the track is live.
+valence: A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).
+tempo: The overall estimated tempo of a track in beats per minute (BPM). In musical terminology, tempo is the speed or pace of a given piece and derives directly from the average beat duration.
+time_signature: Time signature
+rating: Rating derived from Billboard Top 100 and popularity on Spotify. The values of rating were constructed by me and are not meant to be used outside of the context of this class exercise.
+
+## Data Analysis Process 
 
 Based on the understanding of the data, at the very first few attempts, I aggregated categories for some variables and divided numbers into groups. For example, 
 
@@ -38,27 +60,12 @@ After I ran a couple of linear regressions, the RMSEs I got went down to around 
 After examinations, I found out some of the best variables that significantly affects rating, which are: acousticness + tempo + folk_status + mode+ instrumentalness+ liveness + time_signature + danceability_one_half  +  track_mins + track_explicit + energy + loudness + pop_status+ funk_status + rap_status + rock_status + soul_status + hiphop_status + valence.
 
 
-## My Best Model 
-After a few tries, the best model of mine is using a tuned  random forest method. In order to avoid overfitting, I implemented 5-fold cross-validation, and set the max mtry to be the number of columns minus 1. I also set the number of trees to be 200 because I tried 1000 first but the model ran extremely slow (it did not give me the result after 20mins). Therefore, I set the number of trees a bit less.  The public and private board showed pretty similar results. For the training set it was about 15.19, the public testing set was about 15.38 and the private board was about 15.2. Even though there was still some room to improve RMSE, it shows that there was not much variances and the model is not overfitting. 
-
+## Model 
+After a few tries, the best model of mine is using a tuned  random forest method. In order to avoid overfitting, I implemented 5-fold cross-validation, and set the max mtry to be the number of columns minus 1. 
 Some of the variables I kept the way it is, for example, acousticness, tempo, mode,instrumentalness, liveness, track_explicit, energy, loudness,valence. Then, I picked genres that had a larger effect on ratings. Random forest is a great model here as it can be used for both classification and regressions.
-
-## Failed Steps or Missteps - Something Could be Improved
-Here are some missteps when I explored numeric variables.  I jumped quickly  into categorizing  them by quartiles, for example, dividing loudness into 4 groups based on 4 quartiles. I did that for other numeric variables as well. However, after utilizing linear regressions to see the correlations I found out that their correlations were not significant compared to non-transformation. Then, I switched my strategies to keep some of the numeric variables the way they were. However, I believe it was a good try. There might be certain cases that need to transform numeric data into categories, for example, age groups. 
-
-Also, for my last few attempts, I tried boosting strategies with cross-validation and xgboost. However, when using gbm for boosting, the computer ran extremely slow and did not give results after half an hour and then I stopped attempting using the method. Therefore, I was not able to get results from running gbm. 
-
-I also tried Xgboost, however, it worked too well for the training data, which means it was extremely overfitting. I received less than 1 RMSE for the first try and when moving to testing data the RMSE became about 15.7. Even after I changed the number of rounds and some other parameters, it kept overfitting. What could have been improved is to do appropriate tuning. It may help change the overfitting. 
-
-Another thing I could have improved on is to make every genre as a binary variable. There are over a thousand types of genres in the data set. In my past model, I only picked a few common genres for analysis. It could have given me better results if I listed out every type of genre to run the model. 
-
-Overall, this Kaggle competition is a great way for me to apply data tidying and different statistical methods to solving actual problems. After trying different methods I was able to get familiar with the process of data analysis, for example how to start with a data analysis, and what should be done first (data tidying and partition) and what methods can be used, which are some of the key techniques in problem solving. 
-
-
 
 
 **Best submission: Load data**
-
 ```{r}
 library(dplyr)
 library(ggplot2)
