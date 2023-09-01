@@ -2,10 +2,14 @@
 Data source: https://www.kaggle.com/competitions/musiclala2023
 
 ## Understand the data
-id: Song id;
-performer: Performer name;
+id: Song id
+
+performer: Performer name
+
 song: Song name
+
 genre: Genre
+
 track_duration: Duration in milliseconds
 track_explicit: Is explicit
 danceability: Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
