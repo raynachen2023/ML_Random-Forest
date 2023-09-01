@@ -1,0 +1,158 @@
+
+** Load data**
+```{r}
+library(dplyr)
+library(ggplot2)
+library(randomForest)
+library(lattice)
+library(caret)
+dat <- read.csv('analysisData.csv')
+dim(dat)
+test<- read.csv('scoringData.csv')
+dim(test)
+
+```
+
+
+
+
+**Data exploration & tidying**
+```{r}
+#convert to mins for training set
+dat <- dat %>% 
+  mutate(track_mins = dat$track_duration/(1000*60)) 
+test <- test %>% 
+  mutate(track_mins = test$track_duration/(1000*60)) 
+
+#categorize danceability 
+dat <- dat %>% 
+  mutate(danceability_one_half = (danceability>=0.5)) 
+
+test <- test %>% 
+  mutate(danceability_one_half = (danceability>=0.5)) 
+
+#shift the negative ratings to zero ratings. -1 may represents someone did not rate 
+dat$rating <- pmax(0, dat$rating) 
+
+#aggregate the categories in some way - time_signiature  3, 4 categories, and other 
+dat$time_sig_cat <- character(length = nrow(dat))
+dat$time_sig_cat[dat$time_signature == 4] <- "Four"
+dat$time_sig_cat[dat$time_signature == 3] <- "Three"
+dat$time_sig_cat[dat$time_signature %in% c(0,1,5)] <- "Others"
+
+test$time_sig_cat <- character(length = nrow(test))
+test$time_sig_cat[test$time_signature == 4] <- "Four"
+test$time_sig_cat[test$time_signature == 3] <- "Three"
+test$time_sig_cat[test$time_signature %in% c(0,1,5)] <- "Others"
+
+#classify genre 
+pop <- grep(pattern = 'pop', x = dat$genre)
+dat$pop_status <- 0
+dat$pop_status[pop] <-1
+
+
+funk <- grep(pattern = 'funk', x = dat$genre)
+dat$funk_status <- 0
+dat$funk_status[funk] <-1
+
+
+rock <- grep(pattern = 'rock', x = dat$genre)
+dat$rock_status <- 0
+dat$rock_status[rock] <-1
+
+
+rap <- grep(pattern = 'rap', x = dat$genre)
+dat$rap_status <- 0
+dat$rap_status[rap] <-1
+
+soul <- grep(pattern = 'soul', x = dat$genre)
+dat$soul_status <- 0
+dat$soul_status[soul] <-1
+
+
+hiphop <- grep(pattern = 'hip hop', x = dat$genre)
+dat$hiphop_status <- 0
+dat$hiphop_status[hiphop] <-1
+
+
+standards <- grep(pattern = 'standards', x = dat$genre)
+dat$standards_status <- 0
+dat$standards_status[standards] <-1
+
+
+country <- grep(pattern = "\'country\'", x = dat$genre)
+dat$country_status <- 0
+dat$country_status[country] <-1
+
+folk <- grep(pattern = 'folk', x = dat$genre)
+dat$folk_status <- 0
+dat$folk_status[folk] <-1
+
+
+adult <- grep(pattern = 'adult standards', x = dat$genre)
+dat$adult_status <- 0
+dat$adult_status[adult] <-1
+
+
+#classify genre in testing set
+pop <- grep(pattern = 'pop', x = test$genre)
+test$pop_status <- 0
+test$pop_status[pop] <-1
+
+
+funk <- grep(pattern = 'funk', x = test$genre)
+test$funk_status <- 0
+test$funk_status[funk] <-1
+
+
+rock <- grep(pattern = 'rock', x = test$genre)
+test$rock_status <- 0
+test$rock_status[rock] <-1
+
+
+rap <- grep(pattern = 'rap', x = test$genre)
+test$rap_status <- 0
+test$rap_status[rap] <-1
+
+
+soul <- grep(pattern = 'soul', x = test$genre)
+test$soul_status <- 0
+test$soul_status[soul] <-1
+
+
+hiphop <- grep(pattern = 'hip hop', x = test$genre)
+test$hiphop_status <- 0
+test$hiphop_status[hiphop] <-1
+
+
+standards <- grep(pattern = 'standards', x = test$genre)
+test$standards_status <- 0
+test$standards_status[standards] <-1
+
+
+country <- grep(pattern = 'country', x = test$genre)
+test$country_status <- 0
+test$country_status[country] <-1
+
+
+folk <- grep(pattern = 'folk', x = test$genre)
+test$folk_status <- 0
+test$folk_status[folk] <-1
+
+
+
+```
+
+**Using random forest & make predictions**
+```{r}
+set.seed(1031)
+trControl = trainControl(method = 'cv', number = 5)
+tuneGrid = expand.grid(mtry = 1:ncol(dat)-1)
+rf1 <- randomForest(rating ~ acousticness + tempo + folk_status + mode+ instrumentalness+ liveness + time_signature + danceability_one_half  +  track_mins + track_explicit + energy + loudness + pop_status+ funk_status + rap_status + rock_status + soul_status + hiphop_status + valence,data = dat, ntree=200, norm.votes=FALSE)
+
+pred_train = predict(rf1)
+rmse_train_forest = sqrt(mean((pred_train - dat$rating)^2)); rmse_train_forest  
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
