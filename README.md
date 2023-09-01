@@ -2,8 +2,8 @@
 Data source: https://www.kaggle.com/competitions/musiclala2023
 
 ## Understand the data
-id: Song id
-performer: Performer name
+id: Song id;
+performer: Performer name;
 song: Song name
 genre: Genre
 track_duration: Duration in milliseconds
